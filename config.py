@@ -246,8 +246,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler(LOG_FILE),
-        logging.StreamHandler()  # Also print to console
+        logging.StreamHandler()  # Console output only
     ]
 )
 logger = logging.getLogger(__name__)
