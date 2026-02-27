@@ -155,6 +155,48 @@ AQI_LEVELS = {
     5: AQILevel.VERY_POOR.description
 }
 
+# Weather Icon Code to Emoji Mapping
+# Maps OpenWeatherMap icon codes to weather emojis
+WEATHER_EMOJI_MAP = {
+    # Clear
+    "01d": "☀️",  # sunny
+    "01n": "🌙",  # clear night
+    # Cloudy
+    "02d": "⛅",  # partly cloudy day
+    "02n": "🌤️",  # partly cloudy night
+    "03d": "☁️",  # cloudy day
+    "03n": "☁️",  # cloudy night
+    "04d": "☁️",  # overcast day
+    "04n": "☁️",  # overcast night
+    # Drizzle
+    "09d": "🌦️",  # light rain
+    "09n": "🌦️",  # light rain night
+    "10d": "🌧️",  # rain
+    "10n": "🌧️",  # rain night
+    # Thunderstorm
+    "11d": "⛈️",  # thunderstorm
+    "11n": "⛈️",  # thunderstorm night
+    # Snow
+    "13d": "❄️",  # snow
+    "13n": "❄️",  # snow night
+    # Mist/Fog
+    "50d": "🌫️",  # fog/mist
+    "50n": "🌫️",  # fog/mist night
+}
+
+
+def get_weather_emoji(icon_code: str) -> str:
+    """Get emoji for weather icon code.
+    
+    Args:
+        icon_code: OpenWeatherMap icon code (e.g., '01d', '02n')
+        
+    Returns:
+        Weather emoji or '🌤️' if code not found
+    """
+    return WEATHER_EMOJI_MAP.get(icon_code, "🌤️")
+
+
 # UI Messages
 TITLE_MAIN = "Weather Mate"
 LABEL_CITY = "Enter City Name:"

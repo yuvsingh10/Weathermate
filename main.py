@@ -1,7 +1,7 @@
 """Main entry point for Weather Mate application."""
 
 import logging
-from ui import create_gui
+from modern_ui import create_gui
 from config import logger
 
 

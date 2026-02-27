@@ -227,7 +227,7 @@ def get_current_weather(city: str, units: str) -> Optional[Tuple[float, str, int
         raise Exception(f"Invalid weather response format")
 
 
-def get_5_day_forecast(city: str, units: str) -> str:
+def get_5_day_forecast(city: str, units: str):
     """Fetch 5-day forecast from OpenWeatherMap API.
     
     Args:
@@ -235,7 +235,7 @@ def get_5_day_forecast(city: str, units: str) -> str:
         units: Temperature units ('metric' for Celsius, 'imperial' for Fahrenheit)
         
     Returns:
-        Formatted forecast string or error message
+        List of forecast entries if successful, error string otherwise
     """
     try:
         logger.info(f"Fetching 5-day forecast for {city}")
@@ -245,36 +245,14 @@ def get_5_day_forecast(city: str, units: str) -> str:
             "units": units
         }
         response = requests.get(FORECAST_URL, params=params, timeout=API_TIMEOUT)
-        forecast_text = "\n"
         
         if response.status_code == 200:
             try:
                 data = response.json()
-                # Validate response structure
+                # Validate response structure and get the list
                 forecast_list = validate_forecast_response(data)
-                    
-                temp_unit = TEMP_UNIT_METRIC if units == UNITS_METRIC else TEMP_UNIT_IMPERIAL
-                for i in range(
-                    0,
-                    min(INTERVALS_PER_FORECAST, len(forecast_list)),
-                    HOURS_PER_INTERVAL
-                ):
-                    try:
-                        entry = forecast_list[i]
-                        date = entry["dt_txt"].split(" ")[0]
-                        temp = entry["main"]["temp"]
-                        condition = entry["weather"][0]["description"].title()
-                        forecast_text += f"{date}: {condition}, {temp} {temp_unit}\n"
-                    except (KeyError, IndexError, TypeError, ValueError) as e:
-                        logger.error(f"Error parsing forecast entry {i}: {str(e)}")
-                        continue
-                
-                if forecast_text.strip() == "":
-                    logger.warning(f"Could not parse any forecast data for {city}")
-                    return MSG_FORECAST_UNAVAILABLE_PARSE_ERROR
-                    
                 logger.info(f"5-day forecast fetched successfully for {city}")
-                return forecast_text
+                return forecast_list
             except (ValueError, KeyError, TypeError) as e:
                 logger.error(f"Failed to parse forecast response: {str(e)}", exc_info=True)
                 return MSG_FORECAST_UNAVAILABLE_INVALID_RESPONSE
